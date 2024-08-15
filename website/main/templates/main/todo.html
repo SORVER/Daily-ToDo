@@ -1,0 +1,84 @@
+{% extends "main/base.html" %}
+
+{% block title %}
+Today's Tasks
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+
+    .task-item {
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .task-item.completed {
+        background-color: #d4edda;
+    }
+    .task-title {
+        margin: 0;
+        flex: 1;
+    }
+    .task-actions {
+        display: flex;
+        align-items: center;
+    }
+    .task-actions form {
+        margin-left: 10px;
+    }
+    .delete-btn {
+        background: none;
+        border: none;
+        color: red;
+        font-size: 1.5rem;
+        line-height: 1;
+        cursor: pointer;
+    }
+    .delete-btn:hover {
+        color: darkred;
+    }
+</style>
+<div class="container">
+    <h1 class="my-4">Today's Tasks</h1>
+
+    <form method="post" action="/">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.title.label_tag }}
+            {{ form.title }}
+        </div>
+        <button type="submit" class="btn btn-primary">Add Task</button>
+    </form>
+
+    <div class="mt-4">
+        {% for task in tasks %}
+            <div class="task-item {% if task.completed %}completed{% endif %}">
+                <form method="post" action="{% url 'update_task' task.id %}">
+                    {% csrf_token %}
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="task{{ task.id }}" name="completed" {% if task.completed %}checked{% endif %} onChange="this.form.submit()">
+                        <label class="form-check-label" for="task{{ task.id }}"></label>
+                    </div>
+                </form>
+                <p class="task-title">{{ task.title  }}</p>
+                <div class="task-actions">
+                    {% if task.completed %}
+                        <span class="badge badge-success">Completed</span>
+                    {% else %}
+                        <span class="badge badge-warning">Pending</span>
+                    {% endif %}
+                    <form method="post" action="{% url 'delete_task' task.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn">&times;</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

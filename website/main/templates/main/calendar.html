@@ -1,0 +1,149 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Monthly Calendar{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="text-center mb-4">Calendar for <span id="currentMonthYear"></span></h2>
+    
+    <div class="calendar">
+        <div class="row">
+            <div class="col-12">
+                <div class="calendar-header d-flex justify-content-between align-items-center">
+                    <button class="btn btn-light btn-lg" onclick="previousMonth()">&lt;</button>
+                    <h3 id="currentMonthYearDisplay"></h3>
+                    <button class="btn btn-light btn-lg" onclick="nextMonth()">&gt;</button>
+                </div>
+                <div class="weekdays d-flex justify-content-between text-center">
+                    <div class="weekday">Sun</div>
+                    <div class="weekday">Mon</div>
+                    <div class="weekday">Tue</div>
+                    <div class="weekday">Wed</div>
+                    <div class="weekday">Thu</div>
+                    <div class="weekday">Fri</div>
+                    <div class="weekday">Sat</div>
+                </div>
+                <div class="days d-flex flex-wrap" id="calendarDays"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .calendar {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 10px;
+    }
+
+    .calendar-header {
+        margin-bottom: 15px;
+    }
+
+    .weekdays {
+        background-color: blue;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 5px;
+        overflow: hidden;
+        padding: 5px 0;
+    }
+
+    .weekday {
+        width: 14.28%;
+        text-align: center;
+    }
+
+    .days {
+        margin-top: 5px;
+    }
+
+    .day {
+        width: 14.28%;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .day a {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        width: 100%;
+        height: 100%;
+    }
+
+    .day:hover {
+        background-color: #f0f0f0;
+    }
+
+    .today {
+        background-color: #ff9800;
+        color: white;
+        font-weight: bold;
+    }
+
+    .other-month {
+        color: #ccc;
+    }
+
+    .btn-light {
+        background-color: blue;
+        color: white;
+        border: none;
+        font-size: 1.2rem;
+        border-radius: 50%;
+        padding: 5px 10px;
+    }
+
+    .btn-light:hover {
+        background-color: #45a049;
+    }
+</style>
+
+<script>
+    let today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    function renderCalendar(month, year) {
+        const firstDay = new Date(year, month).getDay();
+        const daysInMonth = 32 - new Date(year, month, 32).getDate();
+
+        document.getElementById("currentMonthYear").innerText = `${months[month]} ${year}`;
+        document.getElementById("calendarDays").innerHTML = "";
+
+        for (let i = 0; i < firstDay; i++) {
+            let cell = document.createElement("div");
+            cell.classList.add("day", "other-month");
+            document.getElementById("calendarDays").appendChild(cell);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            let cell = document.createElement("div");
+            cell.classList.add("day");
+            if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                cell.classList.add("today");
+            }
+            cell.innerHTML = `<a href="/calender/${year}/${month + 1}/${day}/">${day}</a>`;
+            document.getElementById("calendarDays").appendChild(cell);
+        }
+    }
+
+    function previousMonth() {
+        currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
+        currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+        renderCalendar(currentMonth, currentYear);
+    }
+
+    function nextMonth() {
+        currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
+        currentMonth = (currentMonth === 11) ? 0 : currentMonth + 1;
+        renderCalendar(currentMonth, currentYear);
+    }
+
+    renderCalendar(currentMonth, currentYear);
+</script>
+{% endblock %}

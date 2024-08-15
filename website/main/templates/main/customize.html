@@ -1,0 +1,55 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Customize Your Default Tasks{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Select a Day to Customize Default Tasks</h2>
+
+    <!-- All Days Section -->
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <!-- All Days in One Section -->
+        <label class="btn btn-outline-primary {% if selected_day == 0 %}active{% endif %}">
+            <input type="radio" name="week_day" id="week_day_0" value="0" autocomplete="off" {% if selected_day == 0 %}checked{% endif %}>
+            Monday
+        </label>
+        <label class="btn btn-outline-primary {% if selected_day == 1 %}active{% endif %}">
+            <input type="radio" name="week_day" id="week_day_1" value="1" autocomplete="off" {% if selected_day == 1 %}checked{% endif %}>
+            Tuesday
+        </label>
+        <label class="btn btn-outline-primary {% if selected_day == 2 %}active{% endif %}">
+            <input type="radio" name="week_day" id="week_day_2" value="2" autocomplete="off" {% if selected_day == 2 %}checked{% endif %}>
+            Wednesday
+        </label>
+        <label class="btn btn-outline-primary {% if selected_day == 3 %}active{% endif %}">
+            <input type="radio" name="week_day" id="week_day_3" value="3" autocomplete="off" {% if selected_day == 3 %}checked{% endif %}>
+            Thursday
+        </label>
+        <label class="btn btn-outline-primary {% if selected_day == 4 %}active{% endif %}">
+            <input type="radio" name="week_day" id="week_day_4" value="4" autocomplete="off" {% if selected_day == 4 %}checked{% endif %}>
+            Friday
+        </label>
+        <label class="btn btn-outline-primary {% if selected_day == 5 %}active{% endif %}">
+            <input type="radio" name="week_day" id="week_day_5" value="5" autocomplete="off" {% if selected_day == 5 %}checked{% endif %}>
+            Saturday
+        </label>
+        <label class="btn btn-outline-primary {% if selected_day == 6 %}active{% endif %}">
+            <input type="radio" name="week_day" id="week_day_6" value="6" autocomplete="off" {% if selected_day == 6 %}checked{% endif %}>
+            Sunday
+        </label>
+    </div>
+
+    <hr>
+
+    <!-- Form to submit task -->
+     
+    <h3>Add Default Tasks for the Selected Day</h3>
+    <form method="post" id="day-form">
+        {% csrf_token %}
+        <input type="hidden" name="week_day" value="{{ selected_day }}">
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Add Task</button>
+    </form>
+
+</div>
+{% endblock %}
